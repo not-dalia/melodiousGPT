@@ -8,38 +8,69 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>ComposerGPT</title>
+  <title>MelodiousGPT</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://relevant.space/styles.css" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Afacad:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
 </head>
 
-<body>
+<body class="day">
   <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-  <div id="main-content">
-    <label for="gpt-api-key">OpenAI API Key</label>
-    <input type="text" id="gpt-api-key" placeholder="OpenAI API Key" />
+  <div class="container">
+    <header>
+      <h1>MelodiousGPT</h1>
+    </header>
 
-    <label for="composition-setting">Music setting/theme</label>
-    <textarea type="text" id="composition-setting" placeholder="Composition Settings"> </textarea>
-    <button id="get-composition">Get Composition</button>
-    <button id="play-button" disabled>Play/Pause</button>
-  </div>
+    <div class="description">
+      <p>
+        An experimental music generator that uses GPT-4o mini to create 30-second <a href="https://tonejs.github.io/" target="_blank">Tone.js</a> compositions. The audio samples aren't perfect for the task, so the compositions may sound a bit off. This is very much a work in progress.
+      </p>
+    </div>
 
-  <div id="results">
-    <div id="composition">
-      <h2>Composition</h2>
-      <div id="composition-mood"></div>
-      <div id="composition-key"></div>
-      <div id="composition-time"></div>
-      <div id="composition-tempo"></div>
-      <div id="composition-instruments"></div>
-      <div id="composition-melody-parts"></div>
+    <div id="main-content">
+      <div class="input-group flex-row items-center">
+        <label for="gpt-api-key">OpenAI API Key</label>
+        <input type="text" id="gpt-api-key" placeholder="OpenAI API Key" />
+      </div>
+
+      <div class="input-group flex-col">
+        <label for="composition-setting">Music setting/theme</label>
+        <textarea type="text" id="composition-setting" placeholder="Composition Settings"> </textarea>
+      </div>
+      <button id="get-composition">Get Composition</button>
+      <button id="play-button" disabled>Play/Pause</button>
+    </div>
+
+    <div id="results">
+      <div id="composition">
+        <h2>Composition</h2>
+        <div id="composition-title" class="empty">No composition yet
+        </div>
+        <div id="composition-mood"></div>
+        <div id="composition-key"></div>
+        <div id="composition-time"></div>
+        <div id="composition-tempo"></div>
+        <div id="composition-instruments"></div>
+        <div id="composition-melody-parts"></div>
+      </div>
     </div>
   </div>
+  <footer>
+    <div class="footer">
+      <div>
+        Made by <a target="_blank" href="https://relevant.space">Dalia</a>
+      </div>
+    </div>
+  </footer>
 
   <script src="https://unpkg.com/tone@13.8.34"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

@@ -1,4 +1,4 @@
-#main-content {
+/* #main-content {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -8,7 +8,7 @@
 textarea {
   width: 100%;
   height: 100px;
-}
+}*/
 
 .loading {
   color: purple;
@@ -16,6 +16,90 @@ textarea {
 
 .done {
   color: green;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.input-group label {
+  flex: initial;
+}
+
+input[type="text"], textarea {
+  min-width: 200px;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  background-color: var(--primary-hover);
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-family: Outfit, sans-serif;
+  font-size: 0.9rem;
+}
+
+button:hover {
+  background-color: var(--primary-color);
+}
+
+button:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+
+.description {
+  width: 100%;
+}
+
+#composition-title {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty {
+  color: gray;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-top-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-left: 0.5rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-done {
+  display: inline-block;
+  margin-left: 0.5rem;
+}
+
+.loading-done::before {
+  content: "✓";
+  color: green;
+  font-size: 1rem;
+}
+
+.loading-not-started {
+  display: inline-block;
+}
+
+.loading-not-started::before {
+  content: "⧖";
+  color: grey;
+  font-size: 1rem;
 }
 
 

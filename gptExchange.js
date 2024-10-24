@@ -4,7 +4,7 @@ const compositionSettingField = document.getElementById("composition-setting");
 let isCompositionLoading = false;
 const systemMessage = {
   role: "system",
-  content: "You are a music composer assistant. All your musical compositions are 30 seconds long. Your musical compositions are not repetitive. When you are given a setting for the composition, you must choose the following properties for your composition: mood, key, time signature, bpm, instruments (no more than 3 instruments, you can only choose from the following instruments: bass-electric\nbassoon\ncello\nclarinet\ncontrabass\nflute\nfrench-horn\nguitar-acoustic\nguitar-electric\nharmonium\nharp\norgan\npiano\nsaxophone\ntrombone\ntrumpet\ntuba\nviolin\nxylophone), and melody parts (at least 4. e.g., main melody, chords, counter melody, bassline, etc.). You can only respond in code. You should not say anything else that is not code. The output code has to be minified valid json with no new lines in the following formats:\n\n- For the properties:\n{\n\"composition_name\": \"...\",\n\"mood\": \"...\",\n\"motif_notes\": [\"...\"],\n\"key\": \"...\".\n\"timeSignature\": \"...\",\n\"bpm\": ...,\n\"instruments\": [...],\n\"melodyParts\": [\n{\n  \"instrument\": ...,\n  \"type\": \"mainMelodyRightHand\"\n}, ...\n]\n}\n\n"
+  content: "You are a music composer assistant. All your musical compositions are 30 seconds long. Your musical compositions are not repetitive. When you are given a setting for the composition, you must choose the following properties for your composition: mood, key, time signature, bpm, instruments (no more than 4 instruments, you can only choose from the following instruments: bass-electric\nbassoon\ncello\nclarinet\ncontrabass\nflute\nfrench-horn\nguitar-acoustic\nguitar-electric\nharmonium\nharp\norgan\npiano\nsaxophone\ntrombone\ntrumpet\ntuba\nviolin\nxylophone), and melody parts (at least 4. e.g., main melody, chords, counter melody, bassline, etc.). You can only respond in code. You should not say anything else that is not code. The output code has to be minified valid json with no new lines in the following formats:\n\n- For the properties:\n{\n\"composition_name\": \"...\",\n\"mood\": \"...\",\n\"motif_notes\": [\"...\"],\n\"key\": \"...\".\n\"timeSignature\": \"...\",\n\"bpm\": ...,\n\"instruments\": [...],\n\"melodyParts\": [\n{\n  \"instrument\": ...,\n  \"type\": \"mainMelodyRightHand\"\n}, ...\n]\n}\n\n"
 }
 
 const followUpMessage = (composition) => {
@@ -20,6 +20,7 @@ const followUpMessage = (composition) => {
 }
 
 const populateCompositionResults = (composition) => {
+  const compositionTitle = document.getElementById("composition-title");
   const compositionMood = document.getElementById("composition-mood");
   const compositionKey = document.getElementById("composition-key");
   const compositionTime = document.getElementById("composition-time");
@@ -27,12 +28,14 @@ const populateCompositionResults = (composition) => {
   const compositionInstruments = document.getElementById("composition-instruments");
   const compositionMelodyParts = document.getElementById("composition-melody-parts");
 
+  compositionTitle.classList.remove("empty");
+  compositionTitle.innerHTML = `${composition.composition_name}`;
   compositionMood.innerHTML = `Mood: ${composition.mood}`;
   compositionKey.innerHTML = `Key: ${composition.key}`;
   compositionTime.innerHTML = `Time Signature: ${composition.timeSignature}`;
   compositionTempo.innerHTML = `Tempo: ${composition.bpm}`;
   compositionInstruments.innerHTML = `Instruments: ${composition.instruments.join(", ")}`;
-  compositionMelodyParts.innerHTML = `Melody Parts: <ul>${composition.melodyParts.map(part => `<li id="${part.type}">${part.type} - ${part.instrument}</li>`).join("")}</ul>`;
+  compositionMelodyParts.innerHTML = `Melody Parts: <ul>${composition.melodyParts.map(part => `<li id="${part.type}" class="flex flex-row items-center">${part.type} - ${part.instrument}</li>`).join("")}</ul>`;
 }
 
 const getCompositionProperties = async (apiKey, setting) => {
@@ -60,7 +63,7 @@ const getCompositionProperties = async (apiKey, setting) => {
   console.log(formattedComposition);
   const compositionJson = JSON.parse(formattedComposition);
   compositionJson.setting = setting;
-  compositionSettingField.value = JSON.stringify(compositionJson);
+  // compositionSettingField.value = JSON.stringify(compositionJson);
   return compositionJson;
 }
 
@@ -71,7 +74,7 @@ const getCompositionParts = async (apiKey, composition) => {
   for (let i = 0; i < compositionParts.length; i++) {
     let partField = document.getElementById(compositionParts[i].type);
     let originalPartField = partField.innerHTML;
-    partField.innerHTML = partField.innerHTML + "<span class='loading'> (loading)</span>";
+    partField.innerHTML = partField.innerHTML + "<div class='loading-spinner'></div>";
     let part = compositionParts[i];
     const partType = part.type;
     followUpMessages.push({
@@ -79,7 +82,7 @@ const getCompositionParts = async (apiKey, composition) => {
       content: `Provide the ${partType} part. It has to be 30 seconds long.`
     })
     let res = await axios.post("https://api.openai.com/v1/chat/completions", {
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
       max_tokens: 2000,
       messages: followUpMessages,
     }, {
@@ -110,7 +113,7 @@ const getCompositionParts = async (apiKey, composition) => {
       melody: JSON.parse(formattedCompositionPart),
       instrument: part.instrument
     });
-    partField.innerHTML = originalPartField + "<span class='done'> (done)</span>";
+    partField.innerHTML = originalPartField + "<div class='loading-done'></div>";
   }
   return result;
 }
